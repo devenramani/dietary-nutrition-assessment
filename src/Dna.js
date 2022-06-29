@@ -1,213 +1,230 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import StepContent from '@mui/material/StepContent';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 
-const steps = [
-    "Personal Details",
-    "Fast Foods ",
-    "Sugar",
-    "Pulses",
-    "Non-Veg",
-    "Dairy",
-    "Vegetables",
-    "Fruits",
-    "Water",
-    "Exercise"
-];
+import { Form, Field } from 'react-final-form';
 
-const PersonalDetails = (props) => {
-    return (
-        <div>
-            <h4>Enter your details:</h4>
-        </div>
-    );
-}
+import {
+    TextField,
+    Typography,
+    Paper,
+    Link,
+    Grid,
+    Button,
+    CssBaseline,
+    RadioGroup,
+    Radio,
+    Checkbox,
+    Select,
+    FormLabel,
+    MenuItem,
+    FormGroup,
+    FormControl,
+    FormControlLabel,
+} from '@mui/material';
 
-const One = (props) => {
-    return (
-        <div>
-            <h4>How often do you eat packaged foods, deep fried foods, or refined flour (maida) foods like pizza, pasta, fries/chips, bhajiya/pakodas, burger, noodles, biscuits, cakes, sweets, etc.?</h4>
-        </div>
-    );
-}
-
-const Two = (props) => {
-    return (
-        <div>
-            <h4>Do you take whole grains (multigrain/brown bread, brown rice, whole wheat chapatis) in your meals?</h4>
-        </div>
-    );
-}
-
-const Three = (props) => {
-    return (
-        <div>
-            <h4>How many tea spoons of sugar do you take in a day as part of beverages (tea/coffee/milk) or soft drinks/juices? (For 1 glass of readymade fruit juice count 4 teaspoons; For 1 bottle 200ml of cola/soft drink count 6 teaspoons).</h4>
-        </div>
-    );
-}
-
-const Four = (props) => {
-    return (
-        <div>
-            <h4>Do you take pulses (daals), or soyabean in your diet?</h4>
-        </div>
-    );
-}
-
-const Five = (props) => {
-    return (
-        <div>
-            <h4>Do you eat non-vegetarian food?</h4>
-        </div>
-    );
-}
-
-const Six = (props) => {
-    return (
-        <div>
-            <h4>Do you take dairy products like milk, cheese, curd or paneer (tofu) in your diet?</h4>
-        </div>
-    );
-}
-
-const Seven = (props) => {
-    return (
-        <div>
-            <h4>How often do you eat green vegetables and salads?</h4>
-        </div>
-    );
-}
-
-const Eight = (props) => {
-    return (
-        <div>
-            <h4>How often do you eat fruits? </h4>
-        </div>
-    );
-}
-
-const Nine = (props) => {
-    return (
-        <div>
-            <h4>How many glasses of water do you drink in a day? (One glass is 200-250ml)</h4>
-        </div>
-    );
-}
-
-const Ten = (props) => {
-    return (
-        <div>
-            <h4>Do you have physical exercise like brisk walking, cycling, swimming, yoga, aerobics etc. for at least half hour.</h4>
-        </div>
-    );
-}
-
-
-
-function getStepContent(step) {
-    switch (step) {
-        case 0:
-            return (<PersonalDetails />);
-        case 1:
-            return (<One />);
-        case 2:
-            return (<Two />);
-        case 3:
-            return (<Three />);
-        case 4:
-            return (<Four />);
-        case 5:
-            return (<Five />);
-        case 6:
-            return (<Six />);
-        case 7:
-            return (<Seven />);
-        case 8:
-            return (<Eight />);
-        case 9:
-            return (<Nine />);
-        case 10:
-            return (<Ten />);
-
-        default:
-            return 'Unknown step';
+const onSubmit = async values => {
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+    await sleep(300);
+    window.alert(JSON.stringify(values, 0, 2));
+};
+const validate = values => {
+    const errors = {};
+    if (!values.firstName) {
+        errors.firstName = 'Required';
     }
-}
+    if (!values.lastName) {
+        errors.lastName = 'Required';
+    }
+    if (!values.email) {
+        errors.email = 'Required';
+    }
+    return errors;
+};
 
 export default function DNA() {
-    const [activeStep, setActiveStep] = React.useState(0);
-
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
-
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleReset = () => {
-        setActiveStep(0);
-    };
 
     return (
-        <div>
-            <Paper elevation={3} >
-                <h1>Dietary Nutrition Assessment</h1>
-                <Box sx={{ maxWidth: 2 / 3, margin: '0 auto' }}>
+        <div style={{ padding: 16, margin: 'auto', maxWidth: 600 }}>
+            <Typography variant="h4" align="center" component="h1" gutterBottom>
+                Dietary Nutrition Assessment
+            </Typography>
 
-                    <Stepper activeStep={activeStep} orientation="vertical">
-                        {steps.map((step, index) => (
-                            <Step key={step}>
-                                <StepLabel
-                                    optional={
-                                        index === 9 ? (
-                                            <Typography variant="caption">Last step</Typography>
-                                        ) : null
-                                    }
-                                >
-                                    {step}
-                                </StepLabel>
-                                <StepContent>
-                                    <Typography>{getStepContent(index)}</Typography>
-                                    <Box sx={{ mb: 2 }}>
-                                        <div>
-                                            <Button
-                                                variant="contained"
-                                                onClick={handleNext}
-                                                sx={{ mt: 1, mr: 1 }}
-                                            >
-                                                {index === steps.length - 1 ? 'Finish' : 'Continue'}
-                                            </Button>
-                                            <Button
-                                                disabled={index === 0}
-                                                onClick={handleBack}
-                                                sx={{ mt: 1, mr: 1 }}
-                                            >
-                                                Back
-                                            </Button>
-                                        </div>
-                                    </Box>
-                                </StepContent>
-                            </Step>
-                        ))}
-                    </Stepper>
-                    {activeStep === steps.length && (
-                        <Paper square elevation={0} sx={{ p: 3 }}>
-                            <Typography>All steps completed - you&apos;re finished</Typography>
-                            <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-                                Reset
-                            </Button>
+            <Form
+                onSubmit={onSubmit}
+                initialValues={{}}
+                validate={validate}
+                render={({ handleSubmit, reset, submitting, pristine, values }) => (
+                    <form onSubmit={handleSubmit} noValidate>
+                        <Paper style={{ padding: 16 }}>
+                            <Grid container alignItems="flex-start" spacing={2}>
+                                <Grid item xs={6}>
+                                    <Field
+                                        fullWidth
+                                        required
+                                        name="firstName"
+                                        component={TextField}
+                                        type="text"
+                                        label="First Name"
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Field
+                                        fullWidth
+                                        required
+                                        name="lastName"
+                                        component={TextField}
+                                        type="text"
+                                        label="Last Name"
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Field
+                                        name="email"
+                                        fullWidth
+                                        required
+                                        component={TextField}
+                                        type="email"
+                                        label="Email"
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControlLabel
+                                        label="Employed"
+                                        control={
+                                            <Field
+                                                name="employed"
+                                                component={Checkbox}
+                                                type="checkbox"
+                                            />
+                                        }
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <FormControl component="fieldset">
+                                        <FormLabel component="legend">Best Stooge</FormLabel>
+                                        <RadioGroup row>
+                                            <FormControlLabel
+                                                label="Larry"
+                                                control={
+                                                    <Field
+                                                        name="stooge"
+                                                        component={Radio}
+                                                        type="radio"
+                                                        value="larry"
+                                                    />
+                                                }
+                                            />
+                                            <FormControlLabel
+                                                label="Moe"
+                                                control={
+                                                    <Field
+                                                        name="stooge"
+                                                        component={Radio}
+                                                        type="radio"
+                                                        value="moe"
+                                                    />
+                                                }
+                                            />
+                                            <FormControlLabel
+                                                label="Curly"
+                                                control={
+                                                    <Field
+                                                        name="stooge"
+                                                        component={Radio}
+                                                        type="radio"
+                                                        value="curly"
+                                                    />
+                                                }
+                                            />
+                                        </RadioGroup>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item>
+                                    <FormControl component="fieldset">
+                                        <FormLabel component="legend">Sauces</FormLabel>
+                                        <FormGroup row>
+                                            <FormControlLabel
+                                                label="Ketchup"
+                                                control={
+                                                    <Field
+                                                        name="sauces"
+                                                        component={Checkbox}
+                                                        type="checkbox"
+                                                        value="ketchup"
+                                                    />
+                                                }
+                                            />
+                                            <FormControlLabel
+                                                label="Mustard"
+                                                control={
+                                                    <Field
+                                                        name="sauces"
+                                                        component={Checkbox}
+                                                        type="checkbox"
+                                                        value="mustard"
+                                                    />
+                                                }
+                                            />
+                                            <FormControlLabel
+                                                label="Salsa"
+                                                control={
+                                                    <Field
+                                                        name="sauces"
+                                                        component={Checkbox}
+                                                        type="checkbox"
+                                                        value="salsa"
+                                                    />
+                                                }
+                                            />
+                                            <FormControlLabel
+                                                label="Guacamole 🥑"
+                                                control={
+                                                    <Field
+                                                        name="sauces"
+                                                        component={Checkbox}
+                                                        type="checkbox"
+                                                        value="guacamole"
+                                                    />
+                                                }
+                                            />
+                                        </FormGroup>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Field
+                                        fullWidth
+                                        name="notes"
+                                        component={TextField}
+                                        multiline
+                                        label="Notes"
+                                    />
+                                </Grid>
+
+                                <Grid item style={{ marginTop: 16 }}>
+                                    <Button
+                                        type="button"
+                                        variant="contained"
+                                        onClick={reset}
+                                        disabled={submitting || pristine}
+                                    >
+                                        Reset
+                                    </Button>
+                                </Grid>
+                                <Grid item style={{ marginTop: 16 }}>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        type="submit"
+                                        disabled={submitting}
+                                    >
+                                        Submit
+                                    </Button>
+                                </Grid>
+                            </Grid>
                         </Paper>
-                    )}
-                </Box>
-            </Paper>
+                        <pre>{JSON.stringify(values, 0, 2)}</pre>
+                    </form>
+                )}
+            />
         </div>
     );
 }
