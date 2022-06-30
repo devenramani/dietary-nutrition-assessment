@@ -83,7 +83,9 @@ const App = () => {
     console.log(microNutrientScoreRes(microNutrientScore));
     console.log(waterScoreRes(waterScore));
 
-    setShowResults(true)
+    window.alert(totalDietNutriBalScoreRes(nutriBalScore) + "\n" + carbFatScoreRes(carbFatScore) + "\n" + protienScoreRes(protienScore) + "\n" + microNutrientScoreRes(microNutrientScore) + "\n" + waterScoreRes(waterScore));
+
+    // setShowResults(true)
   };
 
   const onReset = () => {
