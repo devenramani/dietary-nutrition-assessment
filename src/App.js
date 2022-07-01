@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import { Button, Form, Input, Select, Card, Typography, InputNumber, Radio, Space, Divider } from 'antd';
-const { Title, Paragraph, Text, Link } = Typography;
+import { Button, Form, Input, Select, Card, Typography, InputNumber, Radio, Space, Divider, Collapse } from 'antd';
 
+const { Title, Paragraph, Text, Link } = Typography;
+const { Panel } = Collapse;
 const { Option } = Select;
+
 const layout = {
   labelCol: {
     span: 8,
@@ -20,11 +22,29 @@ const tailLayout = {
   },
 };
 
-const App = () => {
 
+const App = () => {
+  const scollToRef = useRef();
   const [form] = Form.useForm();
 
   const [showResults, setShowResults] = React.useState(false)
+
+  const [results, setResults] = React.useState({
+    nutriBalScore: 0,
+    nutriBalScoreRes: "",
+
+    carbFatScore: 0,
+    carbFatScoreRes: "",
+
+    proteinScore: 0,
+    proteinScoreRes: "",
+
+    microNutrientScore: 0,
+    microNutrientScoreRes: "",
+
+    waterScore: 0,
+    waterScoreRes: "",
+  });
 
   const totalDietNutriBalScoreRes = (nutriBalScore) => {
     if (nutriBalScore >= 10 && nutriBalScore <= 20) { return "Concerning (to seek diet counselling immediately)"; }
@@ -55,14 +75,10 @@ const App = () => {
     else if (waterScore >= 3) { return "Satisfactory (to maintain at least 1.5 L water intake daily)"; }
   }
 
-  const Results = () => (
-    <div id="results" className="search-results">
-      Some Results
-    </div>
-  )
+
 
   const onFinish = (values) => {
-    console.log(values);
+    //console.log(values);
 
     let nutriBalScore = values.Q1 + values.Q2 + values.Q3 + values.Q4 + values.Q5 + values.Q6 + values.Q7 + values.Q8 + values.Q9 + values.Q10;
     let carbFatScore = values.Q1 + values.Q2 + values.Q3;
@@ -70,28 +86,25 @@ const App = () => {
     let microNutrientScore = values.Q5 + values.Q6 + values.Q7 + values.Q8;
     let waterScore = values.Q9;
 
-    console.log(nutriBalScore);
-    console.log(carbFatScore);
-    console.log(protienScore);
-    console.log(microNutrientScore);
-    console.log(waterScore);
+    setResults(previousState => {
+      return {
+        ...previousState,
+        nutriBalScore: nutriBalScore, nutriBalScoreRes: totalDietNutriBalScoreRes(nutriBalScore),
+        carbFatScore: carbFatScore, carbFatScoreRes: carbFatScoreRes(carbFatScore),
+        proteinScore: protienScore, proteinScoreRes: protienScoreRes(protienScore),
+        microNutrientScore: microNutrientScore, microNutrientScoreRes: microNutrientScoreRes(microNutrientScore),
+        waterScore: waterScore, waterScoreRes: waterScoreRes(waterScore)
+      }
+    });
 
+    setShowResults(true)
 
-    console.log(totalDietNutriBalScoreRes(nutriBalScore));
-    console.log(carbFatScoreRes(carbFatScore));
-    console.log(protienScoreRes(protienScore));
-    console.log(microNutrientScoreRes(microNutrientScore));
-    console.log(waterScoreRes(waterScore));
-
-    window.alert(totalDietNutriBalScoreRes(nutriBalScore) + "\n" + carbFatScoreRes(carbFatScore) + "\n" + protienScoreRes(protienScore) + "\n" + microNutrientScoreRes(microNutrientScore) + "\n" + waterScoreRes(waterScore));
-
-    // setShowResults(true)
+    scollToRef.current.scrollIntoView({behavior: "smooth"})
   };
 
   const onReset = () => {
     setShowResults(false)
     form.resetFields();
-    
   };
 
 
@@ -117,10 +130,15 @@ const App = () => {
 
           <Form.Item name="Gender" label="Gender" rules={[{ required: true }]}>
             <Select placeholder="Select a option and change input text above" allowClear>
-              <Option value="male">Male</Option>
-              <Option value="female">Female</Option>
-              <Option value="other">Other</Option>
+              <Option value="Male">Male</Option>
+              <Option value="Female">Female</Option>
+              <Option value="Other">Other</Option>
             </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="Doctor" label="Doctor" rules={[{ required: true }]}>
+            <Input />
           </Form.Item>
 
           <Divider />
@@ -310,12 +328,38 @@ const App = () => {
               Reset
             </Button>
           </Form.Item>
-
         </Form>
-
-        {showResults ? <Results /> : null}
       </Card>
 
+      <div ref={scollToRef}>
+        {showResults ?
+          <Collapse defaultActiveKey={['1']}>
+            <Panel header="Observations" key="1">
+              <Typography>
+                <Title level={3}>Vital Clinic </Title>
+                <Title level={5}>Dr. {form.getFieldValue('Doctor')} </Title><br />
+                Name: {form.getFieldValue('Name')}<br />
+                Age: {form.getFieldValue('Age')}  &emsp; &emsp; Gender: {form.getFieldValue('Gender')} <br /><br />
+
+                A: Dietary Nutritional Balance Score : <b> {results.nutriBalScore} </b> <br />
+                - <i>{results.nutriBalScoreRes}</i><br /><br />
+
+                B: Carbohydrate and Fat Score : <b> {results.carbFatScore} </b><br />
+                -<i>{results.carbFatScoreRes}</i><br /><br />
+
+                C: Protein Score : <b>{results.proteinScore} </b><br />
+                -<i>{results.proteinScoreRes}</i><br /><br />
+
+                D: Micronutrients Score (Vitamins-Minerals) :<b>{results.microNutrientScore} </b><br />
+                -<i>{results.microNutrientScoreRes}</i><br /><br />
+
+                E: Water Score : <b>{results.waterScore}  </b> <br />
+                -<i>{results.waterScoreRes}</i><br /><br />
+              </Typography>
+            </Panel>
+          </Collapse> : null
+        }
+      </div>
     </div>
   );
 };
