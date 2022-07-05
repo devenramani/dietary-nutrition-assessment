@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import './index.css';
 import { Button, Form, Input, Select, Card, Typography, InputNumber, Radio, Space, Divider, Collapse } from 'antd';
 
-const { Title, Paragraph, Text, Link } = Typography;
+const { Title } = Typography;
 const { Panel } = Collapse;
 const { Option } = Select;
 
@@ -70,12 +70,10 @@ const App = () => {
     else if (microNutrientScore >= 13 && microNutrientScore <= 16) { return "Satisfactory (to self-monitor balanced diet)"; }
   }
 
-  const waterScoreRes = (waterScore) => {
-    if (waterScore < 3) { return "Increase water intake"; }
-    else if (waterScore >= 3) { return "Satisfactory (to maintain at least 1.5 L water intake daily)"; }
-  }
-
-
+  // const waterScoreRes = (waterScore) => {
+  //   if (waterScore < 3) { return "Increase water intake"; }
+  //   else if (waterScore >= 3) { return "Satisfactory (to maintain at least 1.5 L water intake daily)"; }
+  // }
 
   const onFinish = (values) => {
     //console.log(values);
@@ -84,7 +82,7 @@ const App = () => {
     let carbFatScore = values.Q1 + values.Q2 + values.Q3;
     let protienScore = values.Q4 + values.Q5 + values.Q6;
     let microNutrientScore = values.Q5 + values.Q6 + values.Q7 + values.Q8;
-    let waterScore = values.Q9;
+    // let waterScore = values.Q9;
 
     setResults(previousState => {
       return {
@@ -93,13 +91,13 @@ const App = () => {
         carbFatScore: carbFatScore, carbFatScoreRes: carbFatScoreRes(carbFatScore),
         proteinScore: protienScore, proteinScoreRes: protienScoreRes(protienScore),
         microNutrientScore: microNutrientScore, microNutrientScoreRes: microNutrientScoreRes(microNutrientScore),
-        waterScore: waterScore, waterScoreRes: waterScoreRes(waterScore)
+        // waterScore: waterScore, waterScoreRes: waterScoreRes(waterScore)
       }
     });
 
     setShowResults(true)
 
-    scollToRef.current.scrollIntoView({behavior: "smooth"})
+    scollToRef.current.scrollIntoView({ behavior: "smooth" })
   };
 
   const onReset = () => {
@@ -110,18 +108,21 @@ const App = () => {
 
 
   return (
-    <div style={{ padding: 16, margin: 'auto' }}>
-      <Typography variant="h4" align="center" component="h2" >
+    <div style={{ padding: 16, margin: 'auto', backgroundColor: '#d0efff' }}>
+      <Typography variant="h1" align="center" component="h1" style={{ color: '#1d3557' }} >
+        The Vital Clinic
+      </Typography>
+      <Typography variant="h4" align="center" component="h4" style={{ color: '#1d3557' }} >
         Dietary Nutrition Assessment
       </Typography>
 
-      <Card bordered={true} style={{ width: 'auto', }}>
+      <Card bordered={true} style={{ width: 'auto', border: '1px solid #1890ff' }}>
 
         <Form {...layout} form={form} name="control-hooks" onFinish={onFinish} size="large" layout="horizontal">
 
           <Form.Item
-            name="Name" label="Name" rules={[{ required: true }]}>
-            <Input />
+            name="Name" label="Dr. Name" rules={[{ required: true }]}>
+            <Input placeholder="Enter doctor name" allowClear/>
           </Form.Item>
 
           <Form.Item name={['Age']} label="Age" rules={[{ type: 'number', min: 0, max: 99, required: true }]}>
@@ -129,19 +130,14 @@ const App = () => {
           </Form.Item>
 
           <Form.Item name="Gender" label="Gender" rules={[{ required: true }]}>
-            <Select placeholder="Select a option and change input text above" allowClear>
+            <Select placeholder="Select" allowClear>
               <Option value="Male">Male</Option>
               <Option value="Female">Female</Option>
               <Option value="Other">Other</Option>
             </Select>
           </Form.Item>
 
-          <Form.Item
-            name="Doctor" label="Doctor" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-
-          <Divider />
+          <Divider style={{border : '1px solid gray'}} />
 
           <div id="questions">
 
@@ -316,7 +312,7 @@ const App = () => {
               </Radio.Group>
             </Form.Item>
 
-            <Divider />
+            <Divider style={{border : '1px solid gray'}} />
 
           </div>
 
@@ -334,11 +330,11 @@ const App = () => {
       <div ref={scollToRef}>
         {showResults ?
           <Collapse defaultActiveKey={['1']}>
-            <Panel header="Observations" key="1">
+            <Panel header="Observations" key="1" style={{border: '2px solid #1d3557'}}>
               <Typography>
                 <Title level={3}>Vital Clinic </Title>
-                <Title level={5}>Dr. {form.getFieldValue('Doctor')} </Title><br />
-                Name: {form.getFieldValue('Name')}<br />
+                <Title level={5}>Dr. {form.getFieldValue('Name')} </Title><br />
+
                 Age: {form.getFieldValue('Age')}  &emsp; &emsp; Gender: {form.getFieldValue('Gender')} <br /><br />
 
                 A: Dietary Nutritional Balance Score : <b> {results.nutriBalScore} </b> <br />
@@ -353,8 +349,10 @@ const App = () => {
                 D: Micronutrients Score (Vitamins-Minerals) :<b>{results.microNutrientScore} </b><br />
                 -<i>{results.microNutrientScoreRes}</i><br /><br />
 
-                E: Water Score : <b>{results.waterScore}  </b> <br />
-                -<i>{results.waterScoreRes}</i><br /><br />
+                {/* E: Water Score : <b>{results.waterScore}  </b> <br />
+                -<i>{results.waterScoreRes}</i><br /><br /> */}
+
+                <i>*Disclaimer: Dietary Nutrition Assessment (Based on recommendations of National Health Portal of India)</i>
               </Typography>
             </Panel>
           </Collapse> : null
