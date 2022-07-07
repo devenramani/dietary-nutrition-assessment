@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
+import companyLogo from './vitamysticlogo.png';
 import { Button, Form, Input, Select, Card, Typography, InputNumber, Radio, Space, Divider, Collapse } from 'antd';
 
 const { Title } = Typography;
@@ -22,9 +23,9 @@ const tailLayout = {
   },
 };
 
-
 const App = () => {
   const scollToRef = useRef();
+
   const [form] = Form.useForm();
 
   const [showResults, setShowResults] = React.useState(false)
@@ -97,7 +98,9 @@ const App = () => {
 
     setShowResults(true)
 
-    scollToRef.current.scrollIntoView({ behavior: "smooth" })
+    setTimeout(function () {
+      scollToRef.current.scrollIntoView({ behavior: "smooth" });
+    }, 300);
   };
 
   const onReset = () => {
@@ -105,15 +108,14 @@ const App = () => {
     form.resetFields();
   };
 
-
-
   return (
     <div style={{ padding: 16, margin: 'auto', backgroundColor: '#d0efff' }}>
-      <Typography variant="h1" align="center" component="h1" style={{ color: '#1d3557' }} >
-        The Vital Clinic
-      </Typography>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <img src={companyLogo} alt="Vitamystic logo" width={250} height={100} />
+      </div><br />
+
       <Typography variant="h4" align="center" component="h4" style={{ color: '#1d3557' }} >
-        Dietary Nutrition Assessment
+        The Vital Clinic
       </Typography>
 
       <Card bordered={true} style={{ width: 'auto', border: '1px solid #1890ff' }}>
@@ -122,7 +124,7 @@ const App = () => {
 
           <Form.Item
             name="Name" label="Dr. Name" rules={[{ required: true }]}>
-            <Input placeholder="Enter doctor name" allowClear/>
+            <Input placeholder="Enter doctor name" allowClear />
           </Form.Item>
 
           <Form.Item name={['Age']} label="Age" rules={[{ type: 'number', min: 0, max: 99, required: true }]}>
@@ -137,7 +139,7 @@ const App = () => {
             </Select>
           </Form.Item>
 
-          <Divider style={{border : '1px solid gray'}} />
+          <Divider style={{ border: '1px solid gray' }} />
 
           <div id="questions">
 
@@ -312,7 +314,7 @@ const App = () => {
               </Radio.Group>
             </Form.Item>
 
-            <Divider style={{border : '1px solid gray'}} />
+            <Divider style={{ border: '1px solid gray' }} />
 
           </div>
 
@@ -327,20 +329,21 @@ const App = () => {
         </Form>
       </Card>
 
+
       <div ref={scollToRef}>
         {showResults ?
           <Collapse defaultActiveKey={['1']}>
-            <Panel header="Observations" key="1" style={{border: '2px solid #1d3557'}}>
+            <Panel header="Observations" key="1" style={{ border: '2px solid #1d3557' }}>
               <Typography>
                 <Title level={3}>Vital Clinic </Title>
-                <Title level={5}>Dr. {form.getFieldValue('Name')} </Title><br />
+                <Title level={5}>Dr. {form.getFieldValue('Name')} </Title>
 
                 Age: {form.getFieldValue('Age')}  &emsp; &emsp; Gender: {form.getFieldValue('Gender')} <br /><br />
 
-                A: Dietary Nutritional Balance Score : <b> {results.nutriBalScore} </b> <br />
+                A: Dietary Nutritional Balance &nbsp; Score : <b> {results.nutriBalScore} </b> <br />
                 - <i>{results.nutriBalScoreRes}</i><br /><br />
 
-                B: Carbohydrate and Fat Score : <b> {results.carbFatScore} </b><br />
+                B: Carbohydrate & Fat Score : <b> {results.carbFatScore} </b><br />
                 -<i>{results.carbFatScoreRes}</i><br /><br />
 
                 C: Protein Score : <b>{results.proteinScore} </b><br />
